@@ -1,1 +1,1 @@
-Bank Accounts Managment System.
+Bank Accounts Management System.
