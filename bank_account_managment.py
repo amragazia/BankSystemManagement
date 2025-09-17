@@ -45,9 +45,22 @@ for acc in data:
     )
     accounts.append(account)
 
+#Persisting Changes Back to JSON File
+def update_bank_accounts_list():
+    data = []
+    for acc in accounts:
+        data.append({
+            "account_number" : acc.account_number,
+            "pin" : acc.pin,
+            "owner" : acc.owner,
+            "balance" : acc.balance
+        })
+
+    with open("updated_list.json", "w") as f:
+        json.dump(data, f, indent=4)
 
 
-def authenticate(get_acc_num):
+def authenticate():
     while True:
         get_acc_num = input("Enter your account number: ")
         if get_acc_num.isnumeric():
@@ -57,15 +70,31 @@ def authenticate(get_acc_num):
 
     for acc in accounts:
         if get_acc_num == acc.account_number:
-            found = True
+            match = True
             break
         else:
-            found = False
-    
-    if found:
+            match = False
+            
+
+    if match:    
+        while True:
+            get_pin = input("Enter your account pin: ")
+            if get_pin.isnumeric():
+                break
+            else:
+                print("Invalid entry, try again.")
+
+        for acc in accounts:
+            if get_pin == acc.pin:
+                match = True
+                break
+            else:
+                match = False
+        
+    if match:
         return True, acc
     else:
-        print("No records found for entered account number")
+        print("AUTHENTICATION FAILED.")
         return False, None
     
 
@@ -82,10 +111,9 @@ def session_control():
         return False
 
 
-get_acc_num =""
-is_authenticated, acc1 = authenticate(get_acc_num)
+is_authenticated, acc1 = authenticate()
 
-while is_authenticated:
+if is_authenticated:
         
 
     start_session = True
@@ -145,7 +173,10 @@ while is_authenticated:
             print(f"You're available balance: ${balance}")
 
         elif prompt == "Q":
-            sys.exit()
+            break
+        
 
         start_session = session_control()
 
+
+update_bank_accounts_list()
