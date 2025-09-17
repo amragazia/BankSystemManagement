@@ -1,0 +1,14 @@
+[
+    {
+        "account_number" : "200320251234",
+        "pin" : "2005",
+        "owner" : "Amr",
+        "balance" : 5000
+    },
+    {
+        "account_number" : "200320255678",
+        "pin" : "2001",
+        "owner" : "Mona",
+        "balance" : 6000
+    }
+] 
