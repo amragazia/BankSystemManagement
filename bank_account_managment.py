@@ -56,7 +56,7 @@ def update_bank_accounts_list():
             "balance" : acc.balance
         })
 
-    with open("updated_list.json", "w") as f:
+    with open("list.json", "w") as f:
         json.dump(data, f, indent=4)
 
 
@@ -70,33 +70,19 @@ def authenticate():
 
     for acc in accounts:
         if get_acc_num == acc.account_number:
-            match = True
-            break
-        else:
-            match = False
-            
-
-    if match:    
-        while True:
-            get_pin = input("Enter your account pin: ")
-            if get_pin.isnumeric():
-                break
-            else:
-                print("Invalid entry, try again.")
-
-        for acc in accounts:
+            while True:
+                get_pin = input("Enter your account pin: ")
+                if get_pin.isnumeric():
+                    break
+                else:
+                    print("Invalid entry, try again.")
             if get_pin == acc.pin:
-                match = True
-                break
+                return True, acc
             else:
-                match = False
-        
-    if match:
-        return True, acc
-    else:
-        print("AUTHENTICATION FAILED.")
-        return False, None
-    
+                print("Incorrect PIN.")
+                return False, None
+    print("No records found for entered account number.")
+    return False, None
 
 def session_control():
     while True:
@@ -151,6 +137,7 @@ if is_authenticated:
                     if amount.upper() == "Q":
                         sys.exit()
             acc1.deposit(amount)
+            update_bank_accounts_list()  # save right away
             print(f"${amount} has been deposited into your account ending in ..{acc1.account_number[8:12]}, New balance: ${acc1.balance}")
 
         elif prompt == "3":
@@ -166,6 +153,7 @@ if is_authenticated:
             if not acc1.withdraw(amount):
                 print("Insufficient Funds, Transaction declined.")
             else:
+                update_bank_accounts_list()   # save right away
                 print(f"${amount} has been withdrawn from your account ending in ..{acc1.account_number[8:12]}, New balance: ${acc1.balance}")
 
         elif prompt == "4":
@@ -180,3 +168,4 @@ if is_authenticated:
 
 
 update_bank_accounts_list()
+
