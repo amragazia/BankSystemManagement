@@ -96,6 +96,17 @@ def session_control():
     else:
         return False
 
+def get_amount(action):            
+    while True:
+        amount = input(f"Enter amount to {action}(Q for Exit): ")
+        if amount.isnumeric() and int(amount) > 0:
+            return int(amount)
+            
+        elif amount.upper() == "Q":
+            sys.exit()
+        else:
+            print("Invalid Entry, Try again, (Q)Exit.")
+
 
 is_authenticated, acc1 = authenticate()
 
@@ -127,29 +138,15 @@ if is_authenticated:
         if prompt == "1":
                 print(f"Here's Your Account Info:\nACC#: {acc1.account_number}\nACC Holder: {acc1.owner}\nBalance: ${acc1.balance}")
         elif prompt == "2":
-            while True:
-                amount = input("Enter amount to Deposit: ")
-                if amount.isnumeric() and int(amount) > 0:
-                    amount = int(amount)
-                    break
-                else:
-                    print("Invalid Entry, Try again, (Q)Exit.")
-                    if amount.upper() == "Q":
-                        sys.exit()
+            amount = get_amount("deposit")
+
             acc1.deposit(amount)
             update_bank_accounts_list()  # save right away
             print(f"${amount} has been deposited into your account ending in ..{acc1.account_number[8:12]}, New balance: ${acc1.balance}")
 
         elif prompt == "3":
-            while True:
-                amount = input("Enter amount to Withdraw: ")
-                if amount.isnumeric() and int(amount) > 0:
-                    amount = int(amount)
-                    break
-                else:
-                    print("Invalid Entry, Try again, (Q)Exit.")
-                    if amount.upper() == "Q":
-                        sys.exit()
+            amount = get_amount("withdraw")
+            
             if not acc1.withdraw(amount):
                 print("Insufficient Funds, Transaction declined.")
             else:
